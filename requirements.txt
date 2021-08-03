@@ -1,0 +1,3 @@
+bscscan-python==1.0.0
+ecdsa==0.17.0
+pycryptodome==3.10.1
