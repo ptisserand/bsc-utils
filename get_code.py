@@ -58,9 +58,12 @@ def write_contract_source_code(contract_source_code: List[Tuple], output_directo
         file_path = elem[0]
         content = elem[1]
         print(file_path)
-        if file_path[0] == '/':
+        while file_path[0] == '/':
             # remove leading slash if any
             file_path = file_path[1:]
+        # if a path is absolute in os.path.join it wins...
+        # >>> os.path.join('a', 'b', '/tmp/c')
+        # '/tmp/c'
         file_path = os.path.join(full_output_directory, file_path)
         full_path = os.path.realpath(file_path)
         if not full_path.startswith(full_output_directory):
