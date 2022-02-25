@@ -37,15 +37,20 @@ class Binance(object):
         ret = []
         result = self.bsc.get_contract_source_code(address)
         for ee in result:
-            # I don't know why bscscan returned value with 2 { }
-            raw_data = ee.get('SourceCode', '{{}}')
-            if raw_data[0] == '{':
-                data = json.loads(raw_data[1:-1])
-                sources = data.get('sources', {})
-                for kk in sources:
-                    ret.append((kk, sources[kk]['content']))
-            else:
+            # I don't know why for some contracts bscscan returned value with 2 { }
+            raw_data = ee.get('SourceCode', '{}')
+            if raw_data[0] != '{':
                 ret.append(("contract.sol", raw_data))
+            else:
+                if raw_data[0] == '{' and raw_data[1] == '{':
+                    data = json.loads(raw_data[1:-1])
+                    sources = data.get('sources', {})
+                    for kk in sources:
+                        ret.append((kk, sources[kk]['content']))
+                else:
+                    data = json.loads(raw_data)
+                    for k, v in data.items():
+                        ret.append((k, v['content']))
         return ret
 
 
